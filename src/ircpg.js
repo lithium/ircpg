@@ -29,21 +29,21 @@ class Dmbot extends IrcpgModule {
         this.client = undefined
         this.loaded_modules = {}
         this.installed_modules = installed_modules || []
-
-        this.commands = {
-            'admin': this.handleAdmin,
-            'reload': this.handleReload,
-            'load': this.handleLoad,
-            'unload': this.handleUnload,
-            'shutdown': this.handleShutdown,
-            'nick': this.handleNick,
-            'join': this.handleJoin,
-            'part': this.handlePart,
-            'say': this.handleSay,
-            'send': this.handleSend
-        }
-
         this.admins = {}
+    }
+
+    load() {
+        super.load()
+        this.addCommand('admin', this.handleAdmin)
+        this.addCommand('reload', this.handleReload)
+        this.addCommand('load', this.handleLoad)
+        this.addCommand('unload', this.handleUnload)
+        this.addCommand('shutdown', this.handleShutdown)
+        this.addCommand('nick', this.handleNick)
+        this.addCommand('join', this.handleJoin)
+        this.addCommand('part', this.handlePart)
+        this.addCommand('say', this.handleSay)
+        this.addCommand('send', this.handleSend)
     }
 
     connect() {
@@ -60,8 +60,7 @@ class Dmbot extends IrcpgModule {
         }, this.config.irc)
         this.client = new irc.Client(this.config.irc.server, this.config.irc.nick, irc_config)
 
-        this.addHandler("pm", this.handlePm)
-
+        this.onConnect()
         this.load_installed_modules()
     }
 
@@ -74,7 +73,7 @@ class Dmbot extends IrcpgModule {
     /*
      * Module loading
      */
-     
+
     load_installed_modules() {
         this.installed_modules.forEach(_ => this.load_module(_))
 
@@ -96,6 +95,7 @@ class Dmbot extends IrcpgModule {
     }
 
     load_module(module_name) {
+        this.unload_module(module_name);
         try {
             var module_cls = require(`./modules/${module_name}`)
             this.loaded_modules[module_name] = new module_cls(this.client)
@@ -130,8 +130,7 @@ class Dmbot extends IrcpgModule {
         if (!this.is_admin(msg)) {
             return false;
         }
-        if (argv.length < requiredNumberOfArguments+1) {
-            this.client.say(msg.nick, `Usage: ${argv[0]} ${usage}`)
+        if (!this.require_usage(argv, msg, requiredNumberOfArguments, usage)) {
             return false;
         }
         return true;
@@ -140,15 +139,6 @@ class Dmbot extends IrcpgModule {
     /*
      * Admin Command Handlers
      */
-
-    handlePm(from, txt, msg) {
-        var argv = txt.split(/\s+/)
-
-        var method = this.commands[argv[0].toLowerCase()]
-        if (method) {
-            method.bind(this)(from, argv, msg)
-        }
-    }
 
     handleAdmin(from, argv, msg) {
         if (argv.length < 2) {
