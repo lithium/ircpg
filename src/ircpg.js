@@ -1,8 +1,7 @@
 const irc = require("irc")
 const invalidate = require('invalidate-module');
 
-var IrcpgModule = require('./modules/IrcpgModule')
-var CharacterService = require('./services/CharacterService')
+const IrcpgModule = require('./modules/IrcpgModule')
 
 
 class AuthenticatedAdmin {
@@ -32,9 +31,11 @@ class Dmbot extends IrcpgModule {
         this.installed_modules = installed_modules || []
         this.admins = {}
 
-        this.injected = {
-            'characterService': new CharacterService()
+        this.dependencies = {
+            'characterService': './services/CharacterService'
         }
+        this.injected = {}
+        this.reload_dependencies()
     }
 
     load() {
@@ -76,15 +77,39 @@ class Dmbot extends IrcpgModule {
     }
 
     /*
+     * Dependency Injetion
+     */
+    reload_dependencies() {
+        var options = this.get_dependency_options()
+        this.injected = {}
+
+        Object.keys(this.dependencies).forEach(key => {
+            var name = this.dependencies[key]
+            invalidate(require.resolve(name))
+            try {
+                var dep = require(name)
+            } catch (e) {
+                console.log(`loading dependency "${name}" failed`)
+                console.log(e)
+                return e
+            }
+            this.injected[key] = new dep(options)
+        })
+    }
+
+    get_dependency_options() {
+        return {}
+    }
+
+    /*
      * Module loading
      */
 
     load_installed_modules() {
         this.installed_modules.forEach(_ => this.load_module(_))
-
     }
 
-    reload() {
+    reload_modules() {
         Object.keys(this.loaded_modules).forEach(_ => {
             this.unload_module(_)
             this.load_module(_)
@@ -167,7 +192,8 @@ class Dmbot extends IrcpgModule {
         if (!this.require_admin_usage(argv, msg, 0)) {
             return;
         }
-        this.reload();
+        this.reload_dependencies();
+        this.reload_modules();
         this.client.say(from, "reload: Reloading.")
     }
 
