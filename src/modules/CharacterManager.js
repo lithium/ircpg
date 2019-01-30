@@ -6,6 +6,7 @@ class CharacterManager extends IrcpgModule
     load() {
         super.load()
         this.addCommand("REGISTER", this.handleRegister);
+        this.addCommand("SET", this.handleSet);
     }
 
     handleRegister(from, argv, msg) {
@@ -26,11 +27,38 @@ class CharacterManager extends IrcpgModule
                     this.client.say(from, "register: authenticated.")
                 }
             } else {
-                this.characterService.createNewCharacter(nick, password, msg)
-                this.client.say(from, "register: new character created.")
+                this.characterService.createNewCharacter(nick, password, msg).then(_ => 
+                    this.client.say(from, "register: new character created.")
+                )
             }
         })
 
+    }
+
+    handleSet(from, argv, msg) {
+        if (!this.require_usage(argv, msg, 2, "<variable> <value>")) {
+            return;
+        }
+        var whitelist = ['password']
+        var name = argv[1].toLowerCase()
+        var value = argv[2]
+
+        if (whitelist.indexOf(name) == -1) {
+            this.client.say(from, `set: unknown variable "${name}"`)
+            return
+        }
+
+        this.characterService.authenticatedCharacter(msg).then(c => {
+            var char = new Character(c)
+            if (name == "password") {
+                char.set_password(value)
+            }
+            this.characterService.save(char).then(_ => {
+                this.client.say(from, `set: ${name} changed.`)
+            }, e => {
+                this.client.say(from, `set: Unable to change ${name}.`)
+            })
+        })
     }
 }
 

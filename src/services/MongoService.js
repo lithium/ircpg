@@ -31,6 +31,18 @@ class MongoService
     get_db_name() {
         return this.options.db_name || 'ircpg'
     }
+
+
+    save(obj) {
+        if (this.collection) {
+            if (obj._id) {
+                return this.collection.updateOne({_id: obj._id}, { "$set": obj})
+            }
+            else {
+                return this.collection.insertOne(obj)
+            }
+        }
+    }
 }
 
 module.exports = MongoService

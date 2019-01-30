@@ -24,6 +24,7 @@
         DROP an item
         EQUIPMENT list equipment
         INVENTORY list inventory
+        STATUS show character status
         LOOK at the room```
 
 
