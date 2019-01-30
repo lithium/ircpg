@@ -5,11 +5,13 @@ class CharacterManager extends IrcpgModule
 {
     load() {
         super.load()
-        this.addCommand("REGISTER", this.handleRegister);
-        this.addCommand("SET", this.handleSet);
+
+        this.addCommand("REGISTER", this.commandRegister);
+        this.addCommand("SET", this.commandSet);
     }
 
-    handleRegister(from, argv, msg) {
+
+    commandRegister(from, argv, msg) {
         if (!this.require_usage(argv, msg, 1, "<password>")) {
             return;
         }
@@ -35,7 +37,7 @@ class CharacterManager extends IrcpgModule
 
     }
 
-    handleSet(from, argv, msg) {
+    commandSet(from, argv, msg) {
         if (!this.require_usage(argv, msg, 2, "<variable> <value>")) {
             return;
         }
