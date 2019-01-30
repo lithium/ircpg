@@ -1,6 +1,6 @@
 
-const MongoService = require('./MongoService')
-const Character = require('../models/Character')
+const MongoService = require('../services/MongoService')
+
 
 class CharacterService extends MongoService
 {
@@ -36,7 +36,7 @@ class CharacterService extends MongoService
     }
 
     createNewCharacter(nick, password, msg) {
-       var character = new Character({nick: nick})
+       var character = new this.Character({nick: nick})
        character.set_password(password)
 
        return this.save(character)

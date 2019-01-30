@@ -23,16 +23,20 @@ class AuthenticatedAdmin {
 
 
 class Dmbot extends IrcpgModule {
-    constructor(config, installed_modules) {
+    constructor(config, installed_modules, dependencies) {
         super()
         this.config = config
         this.client = undefined
-        this.loaded_modules = {}
-        this.installed_modules = installed_modules || []
         this.admins = {}
 
-        this.dependencies = {
-            'characterService': './services/CharacterService'
+        this.loaded_modules = {}
+        this.installed_modules = installed_modules || [
+            './character/CharacterManager'
+        ]
+
+        this.dependencies = dependencies || {
+            'Character': {static: './character/Character'},
+            'characterService': './character/CharacterService'
         }
         this.injected = {}
         this.reload_dependencies()
@@ -85,6 +89,13 @@ class Dmbot extends IrcpgModule {
 
         Object.keys(this.dependencies).forEach(key => {
             var name = this.dependencies[key]
+
+            var isStatic = false
+            if (name.hasOwnProperty("static")) {
+                isStatic = true
+                name = name.static
+            }
+
             invalidate(require.resolve(name))
             try {
                 var dep = require(name)
@@ -93,7 +104,12 @@ class Dmbot extends IrcpgModule {
                 console.log(e)
                 return e
             }
-            this.injected[key] = new dep(options)
+
+            if (isStatic) {
+                this.injected[key] = dep
+            } else {
+                this.injected[key] = new dep(options)
+            }
         })
     }
 
@@ -119,7 +135,7 @@ class Dmbot extends IrcpgModule {
     unload_module(module_name) {
         if (module_name in this.loaded_modules) {
             this.loaded_modules[module_name].unload()
-            invalidate(require.resolve(`./modules/${module_name}`))
+            invalidate(require.resolve(module_name))
             delete this.loaded_modules[module_name]
         } 
     }
@@ -127,7 +143,7 @@ class Dmbot extends IrcpgModule {
     load_module(module_name) {
         this.unload_module(module_name);
         try {
-            var module_cls = require(`./modules/${module_name}`)
+            var module_cls = require(module_name)
             this.loaded_modules[module_name] = new module_cls(Object.assign({
                 'client': this.client
             }, this.injected)) 

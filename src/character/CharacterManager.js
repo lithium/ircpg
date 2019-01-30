@@ -1,5 +1,6 @@
-const IrcpgModule = require('./IrcpgModule')
-const Character = require('../models/Character')
+
+const IrcpgModule = require('../modules/IrcpgModule')
+
 
 class CharacterManager extends IrcpgModule 
 {
@@ -21,7 +22,7 @@ class CharacterManager extends IrcpgModule
 
         this.characterService.getByNick(nick).then(c => {
             if (c) {
-                var character = new Character(c)
+                var character = new this.Character(c)
                 if (!character.check_password(password)) {
                     this.client.say(from, "register: unable to authenticate.")
                 } else {
@@ -51,7 +52,7 @@ class CharacterManager extends IrcpgModule
         }
 
         this.characterService.authenticatedCharacter(msg).then(c => {
-            var char = new Character(c)
+            var char = new this.Character(c)
             if (name == "password") {
                 char.set_password(value)
             }

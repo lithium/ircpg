@@ -3,7 +3,5 @@ var ircpg = require("./src/ircpg")
 var config = require("./config.js")
 
 
-var dmbot = new ircpg.Dmbot(config, [
-    "CharacterManager",
-])
+var dmbot = new ircpg.Dmbot(config)
 dmbot.connect()
