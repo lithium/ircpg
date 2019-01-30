@@ -1,9 +1,19 @@
 
 module.exports = {
-    channels: ["#ircpg"],
-    server: "server.irc.com",
-    port: 9999,
-    nick: "DM",
-    userName: "ircpg",
-    realName: "Dungeon Master",
+    admins: {
+        "nickname": "plaintextpassword"
+    },
+
+    irc: {
+        channels: ["#ircpg"],
+        server: "server.irc.com",
+        port: 9999,
+        userName: "ircpg",
+        realName: "Dungeon Master",
+        nick: "DM",
+    }
+
+    database: {
+        "name": "ircpg"
+    }
 }    
