@@ -10,9 +10,11 @@ class IrcpgModule {
     unload() {}
 
     addHandler(eventName, method) {
-        var callback = method.bind(this)
-        this.client.addListener(eventName, callback)
-        this.handlers[method] = callback
+        if (this.client) {
+            var callback = method.bind(this)
+            this.client.addListener(eventName, callback)
+            this.handlers[method] = callback
+        }
     }
 
     removeHandler(eventName, method) {

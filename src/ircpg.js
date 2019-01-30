@@ -29,10 +29,6 @@ class Dmbot extends IrcpgModule {
         this.client = undefined
         this.loaded_modules = {}
         this.installed_modules = installed_modules || []
-        this.installed_modules.forEach(function(m) {
-            this.load_module(m)
-        }.bind(this))
-
 
         this.commands = {
             'admin': this.handleAdmin,
@@ -63,8 +59,10 @@ class Dmbot extends IrcpgModule {
             floodProtection: true
         }, this.config.irc)
         this.client = new irc.Client(this.config.irc.server, this.config.irc.nick, irc_config)
-        this.reload()
+
         this.addHandler("pm", this.handlePm)
+
+        this.load_installed_modules()
     }
 
     shutdown(reason) {
@@ -76,12 +74,17 @@ class Dmbot extends IrcpgModule {
     /*
      * Module loading
      */
+     
+    load_installed_modules() {
+        this.installed_modules.forEach(_ => this.load_module(_))
+
+    }
 
     reload() {
-        Object.keys(this.loaded_modules).forEach(function(m) {
-            this.unload_module(m)
-            this.load_module(m)
-        }.bind(this))
+        Object.keys(this.loaded_modules).forEach(_ => {
+            this.unload_module(_)
+            this.load_module(_)
+        })
     }    
 
     unload_module(module_name) {
