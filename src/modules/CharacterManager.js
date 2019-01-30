@@ -16,6 +16,8 @@ class CharacterManager extends IrcpgModule
         var nick = from
         var newpass = argv[1]
         console.log("register", nick, newpass)
+
+        this.characterService.getByNick(nick)
     }
 }
 

@@ -2,6 +2,7 @@ const irc = require("irc")
 const invalidate = require('invalidate-module');
 
 var IrcpgModule = require('./modules/IrcpgModule')
+var CharacterService = require('./services/CharacterService')
 
 
 class AuthenticatedAdmin {
@@ -30,6 +31,10 @@ class Dmbot extends IrcpgModule {
         this.loaded_modules = {}
         this.installed_modules = installed_modules || []
         this.admins = {}
+
+        this.injected = {
+            'characterService': new CharacterService()
+        }
     }
 
     load() {
@@ -98,7 +103,9 @@ class Dmbot extends IrcpgModule {
         this.unload_module(module_name);
         try {
             var module_cls = require(`./modules/${module_name}`)
-            this.loaded_modules[module_name] = new module_cls(this.client)
+            this.loaded_modules[module_name] = new module_cls(Object.assign({
+                'client': this.client
+            }, this.injected)) 
             return undefined
         } catch (e) {
             console.log(`loading module "${module_name}" failed`)

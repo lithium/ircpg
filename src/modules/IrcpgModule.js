@@ -1,9 +1,10 @@
 
 class IrcpgModule {
-    constructor(client) {
+    constructor(dependencies) {
+        Object.keys(dependencies || {}).forEach(_ => this[_] = dependencies[_])
+        
         this.handlers = {};
         this.pending_handlers = [];
-        this.client = client;
         this.commands = {};
 
         this.load();
