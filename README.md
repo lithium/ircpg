@@ -31,6 +31,7 @@ CLASSES
     Commoner class has simple weapon proficiency 
 
 SKILLS
+
     - Athletics (climbing, jumping, swimming)
     - Acrobatics (balancing, dodging, rolling)
     - Stealth (avoid Mobs)
@@ -40,6 +41,7 @@ SKILLS
     - Perception (spot faraway mobs/items)
 
 PROFICIENCIES 
+
     - Light Armor (equip armor [higher level items require more skill?])
     - Medium Armor
     - Heavy Armor
@@ -48,6 +50,7 @@ PROFICIENCIES
     - Martial Melee/Ranged
 
 EQUIPMENT
+
     - helmet
     - cape
     - armor
