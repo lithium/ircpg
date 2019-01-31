@@ -31,12 +31,13 @@ class Dmbot extends IrcpgModule {
 
         this.loaded_modules = {}
         this.installed_modules = installed_modules || [
-            './character/CharacterManager'
+            './character/CharacterManager',
+            './channel/ChannelManager'
         ]
 
         this.dependencies = dependencies || {
             'Character': {static: './character/Character'},
-            'characterService': './character/CharacterService'
+            'characterService': './character/CharacterService',
         }
         this.injected = {}
         this.reload_dependencies()

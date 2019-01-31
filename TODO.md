@@ -5,7 +5,6 @@
     X users can register nicks
     X characters have a permanent state
     X  characters can change their password 
-    - characters have an active channel (last channel dmbot saw them join or they can GO #channel)
     - characters have an inventory
     - characters can equip equipment
     - basic character actions ```
