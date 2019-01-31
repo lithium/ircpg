@@ -31,12 +31,12 @@ class Dmbot extends IrcpgModule {
 
         this.loaded_modules = {}
         this.installed_modules = installed_modules || [
+            './channel/ChannelManager',
             './character/CharacterManager',
-            './channel/ChannelManager'
         ]
 
         this.dependencies = dependencies || {
-            'Character': {static: './character/Character'},
+            'channelService': './channel/ChannelService',
             'characterService': './character/CharacterService',
         }
         this.injected = {}
@@ -91,12 +91,6 @@ class Dmbot extends IrcpgModule {
         Object.keys(this.dependencies).forEach(key => {
             var name = this.dependencies[key]
 
-            var isStatic = false
-            if (name.hasOwnProperty("static")) {
-                isStatic = true
-                name = name.static
-            }
-
             invalidate(require.resolve(name))
             try {
                 var dep = require(name)
@@ -106,11 +100,7 @@ class Dmbot extends IrcpgModule {
                 return e
             }
 
-            if (isStatic) {
-                this.injected[key] = dep
-            } else {
-                this.injected[key] = new dep(options)
-            }
+            this.injected[key] = new dep(options)
         })
     }
 
