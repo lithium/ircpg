@@ -31,6 +31,7 @@ class Dmbot extends IrcpgModule {
 
         this.loaded_modules = {}
         this.installed_modules = installed_modules || [
+            './area/AreaManager',
             './channel/ChannelManager',
             './character/CharacterManager',
         ]
@@ -55,6 +56,9 @@ class Dmbot extends IrcpgModule {
         this.addCommand('part', this.handlePart)
         this.addCommand('say', this.handleSay)
         this.addCommand('send', this.handleSend)
+    }
+    unload() {
+        super.unload()
     }
 
     connect() {
@@ -268,6 +272,7 @@ class Dmbot extends IrcpgModule {
         var args = argv.slice(1)
         this.client.send.apply(this.client, args)
     }
+
 }
 
 

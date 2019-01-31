@@ -16,7 +16,6 @@ class ChannelManager extends IrcpgModule
         this.addHandler("kill", this.handleQuits);
         this.addHandler("nick", this.handleNicks);
         this.addHandler("kick", this.handleKicks);
-
     }
 
     unload() {

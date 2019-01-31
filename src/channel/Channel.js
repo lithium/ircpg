@@ -1,4 +1,6 @@
 
+const Area = require('../area/Area')
+
 
 class Channel
 {
@@ -6,6 +8,13 @@ class Channel
         this.name = name
         this.members = {}
         this.area = undefined
+
+        this.initializeArea()
+    }
+
+    initializeArea() {
+        this.area = new Area()
+        this.area.initializeDemoArea()
     }
 
     join(nick, mode) {

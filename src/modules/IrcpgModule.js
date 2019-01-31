@@ -17,11 +17,11 @@ class IrcpgModule {
     }
 
     load() {
-        this.addHandler("pm", this.handlePmForCommand);
+        this.addHandler("pm", this.handlePmForCommand)
     }
 
     unload() {
-        this.removeHandler("pm", this.handlePmForCommand);
+        this.removeHandler("pm", this.handlePmForCommand)
     }
 
     addHandler(eventName, method) {
@@ -47,13 +47,13 @@ class IrcpgModule {
         delete this.commands[commandName.toUpperCase()];
     }
 
-    handlePmForCommand(from, txt, msg) 
+    handlePmForCommand(from, txt, msg, channel) 
     {
         var argv = txt.split(/\s+/)
         var cmd = argv[0].toUpperCase()
         var method = this.commands[cmd]
         if (method) {
-            method.bind(this)(from, argv, msg)
+            method.bind(this)(from, argv, msg, channel)
         }
     }
 
