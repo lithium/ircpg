@@ -1,21 +1,23 @@
 IRCPG
 
+Character name is your current nickname. You can only act as a character with the same name as your current nick. You can register and password protect unclaimed nicks for new Characters.
 
-Nick is active character, you can register and password protect unclaimed nicks
+A Character can be in any number of Rooms(channels) at the same time. Public actions only apply to the channel they are used in. But the character has the same equipment, status, hp etc in all. (a Character in one Room may appear to suddenly fall dead because they were being attacked in another channel)
 
-Nick can register a command prefix
 
 CHANNELS
 ========
-An op of a channel can register it as an Area. Ops have creation rights for an Area. New Rooms can be defined with Exits. Mobs and Items can be spawned from Blueprints based on caster level
+An op of a channel can invite Dmbot to it.  Any channel Dmbot is in has an associated Area with at least 1 Room. Any registered Characters in that channel are considered part of the same Group and are all in the same Current Room.  Any Character may issue a GO command to change the Current Room. If some of the Characters in the channel are unable to use that exit, all Characters stay in the original room.
+
+
+AREAS
+=====
+An Area is a collection of Rooms connected by Exits.  An Exit may have an obstacle that will require a skill check to successfully traverse it.  Rooms can be populated with Items or Mobs.  Mobs and Items can be spawned from Blueprints based on Character Level
 
 
 DUNGEONS
 ========
-A character can go to a dungeon. Dmbot will generate a dungeon instance and create a channel inviting the party.
-All members of the channel are in the same Room. Any voiced member can issue commands (that may move the party to a new Room in the same channel)
-
-Dungeon instances consist of a series of Rooms with Mobs and Items. Mobs can wander.
+Characters can request a randomized dungeon instance. Dmbot will generate a randomized Area and a new private channel for the Character and invite the Character and op them. 
 
 
 COMBAT
@@ -27,35 +29,69 @@ CHARACTERS
 ==========
 Characters can gain Class Levels by choosing an active class and gaining enough xp to level up.
 
-CLASSES
-    Commoner class has simple weapon proficiency 
+### Level
 
-SKILLS
+Character Level is determined by the sum of all Class Levels.  
+A Character can only have 1 Active Class at any time. 
+XP gained goes towards your next Active Class Level.  
+If you switch your Active Class, your XP will be retained until when you switch back to that class. 
 
-    - Athletics (climbing, jumping, swimming)
-    - Acrobatics (balancing, dodging, rolling)
-    - Stealth (avoid Mobs)
-    - Arcana (know about magic items)
-    - Investigation (find nearby hidden items/traps)
-    - Medicine (cure diseases, poisons)
-    - Perception (spot faraway mobs/items)
+### CLASSES
 
-PROFICIENCIES 
+Characters start out with Commoner as the Active Class. Commoners have only Simple Weapon Proficiency and no Armor Proficiencies.
 
-    - Light Armor (equip armor [higher level items require more skill?])
-    - Medium Armor
-    - Heavy Armor
-    - Shields
-    - Simple Melee/Ranged
-    - Martial Melee/Ranged
+### ACTIONS
 
-EQUIPMENT
+*Public Actions*
 
-    - helmet
-    - cape
-    - armor
-    - shield
-    - belt
-    - gloves
-    - boots
-    - 2 accessory (ring,necklace,bracelet)
+Public Actions are used with IRC /action in the channel you want to act in: `/me go north`
+
+ * go/goes <direction> 
+ * attack/attacks <target>
+ * cast/casts <spell> [targets]
+ * use/uses <item>
+ * search/searches [target]
+ * pickup/"picks up" <item>
+ * drop/drops <item>
+ * look/looks [target]
+
+*Private Commands*
+
+Private Commands are sent in private message to Dmbot:  `/msg DM equip`
+
+ * EQUIP <item> [slot]
+ * UNEQUIP <slot>
+ * STATUS 
+ * CLASS
+ * INVENTORY [filter]
+
+
+### SKILLS
+
+ - Athletics (climbing, jumping, swimming)
+ - Acrobatics (balancing, dodging, rolling)
+ - Stealth (avoid Mobs)
+ - Arcana (know about magic items)
+ - Investigation (find nearby hidden items/traps)
+ - Medicine (cure diseases, poisons)
+ - Perception (spot faraway mobs/items)
+
+### PROFICIENCIES 
+
+ - Light Armor (equip armor [higher level items require more skill?])
+ - Medium Armor
+ - Heavy Armor
+ - Shields
+ - Simple Melee/Ranged
+ - Martial Melee/Ranged
+
+### EQUIPMENT
+
+ - helmet
+ - cape
+ - armor
+ - shield
+ - belt
+ - gloves
+ - boots
+ - 2 accessory (ring,necklace,bracelet)
