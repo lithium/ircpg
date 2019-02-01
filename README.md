@@ -1,6 +1,12 @@
 IRCPG
+-----
 
-Character name is your current nickname. You can only act as a character with the same name as your current nick. You can register and password protect unclaimed nicks for new Characters.
+IRC bot that provides a persistent world MUD/MUSH
+
+
+Playing
+=======
+Character name is your current nick. You can only act as a character with the same name as your current nick. You can register and password protect unclaimed nicks for new Characters.
 
 A Character can be in any number of Rooms(channels) at the same time. Public actions only apply to the channel they are used in. But the character has the same equipment, status, hp etc in all. (a Character in one Room may appear to suddenly fall dead because they were being attacked in another channel)
 
@@ -46,21 +52,21 @@ Characters start out with Commoner as the Active Class. Commoners have only Simp
 
 Public Actions are used with IRC /action in the channel you want to act in: `/me go north`
 
- * go/goes <direction> 
- * attack/attacks <target>
- * cast/casts <spell> [targets]
- * use/uses <item>
+ * go/goes &lt;direction> 
+ * attack/attacks &lt;target>
+ * cast/casts &lt;spell> [targets]
+ * use/uses &lt;item>
  * search/searches [target]
- * pickup/"picks up" <item>
- * drop/drops <item>
+ * pickup/"picks up" &lt;item>
+ * drop/drops &lt;item>
  * look/looks [target]
 
 *Private Commands*
 
 Private Commands are sent in private message to Dmbot:  `/msg DM equip`
 
- * EQUIP <item> [slot]
- * UNEQUIP <slot>
+ * EQUIP &lt;item> [slot]
+ * UNEQUIP &lt;slot>
  * STATUS 
  * CLASS
  * INVENTORY [filter]
