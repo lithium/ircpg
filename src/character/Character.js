@@ -1,16 +1,14 @@
 
 const crypto = require('crypto')
 const equip = require('../item/equip')
+const Mob = require('../mob/Mob')
 
-
-class Character {
+class Character extends Mob
+{
     constructor(obj) {
+        super(obj)
         this.nick = undefined
         this.password = undefined
-
-        this.equipment = new equip.EquipmentSlots()
-        this.inventory = new equip.Inventory()
-
 
         obj && Object.assign(this, obj) // copy construtor
     }

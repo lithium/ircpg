@@ -14,6 +14,21 @@ var EquipmentTypes = {
 };
 Object.freeze(EquipmentTypes)
 
+var EquipmentSlots = {
+    "Helmet": "helmet",
+    "Cape": "cape",
+    "Armor": "armor",
+    "Shield": "shield",
+    "Belt": "belt",
+    "Gloves": "gloves",
+    "Boots": "boots",
+    "Accessory1": "accessory1",
+    "Accessory2": "accessory2",
+    "PrimaryWeapon": "primary",
+    "OffhandWeapon": "offhand",
+};
+Object.freeze(EquipmentSlots)
+
 
 var ValidEquipmentSlots = {
     "Helmet": [EquipmentTypes.Helmet],
@@ -29,9 +44,7 @@ var ValidEquipmentSlots = {
     "OffhandWeapon": [EquipmentTypes.Weapon, EquipmentTypes.Tool],
 };
 
-
-
-class EquipmentSlots {
+class EquipmentInventory {
     constructor(obj) {
         Object.keys(ValidEquipmentSlots).forEach(slot => this[slot] = undefined)
         Object.seal(this)
@@ -40,11 +53,9 @@ class EquipmentSlots {
 
     equip(slot, item) {
         var typesForSlot = ValidEquipmentSlots[slot] 
-        if (item.equippable && typesForSlot && typesForSlot.indexOf(item.type) != -1)
+        if (typesForSlot && typesForSlot.indexOf(item.type) != -1)
         {
-            this.unequip(slot)
             this[slot] = item
-            item.equip(slot)
             return true
         }
         return false
@@ -52,7 +63,6 @@ class EquipmentSlots {
 
     unequip(slot) {
         if (this[slot]) {
-            this[slot].unequip()
             delete this[slot];
         }
     }
@@ -87,7 +97,8 @@ class Inventory {
 
 module.exports = {
     EquipmentTypes: EquipmentTypes,
-    ValidEquipmentSlots: ValidEquipmentSlots,
     EquipmentSlots: EquipmentSlots,
+    ValidEquipmentSlots: ValidEquipmentSlots,
+    EquipmentInventory: EquipmentInventory,
     Inventory: Inventory
 }

@@ -1,38 +1,24 @@
 
-
-function randomid()
-const identity = require('../identity')
 const uuid4 = require('uuid/v4')
+
 
 class Item
 {
     constructor(obj) {
-        this._id = undefined
+        this.id = undefined
         this.name = undefined
         this.description = undefined
-        this.type = undefined // equip.EquipmentType
+        this.type = undefined 
 
-        this.equippable = false
-        this.equipped = false
-        this.slot = undefined
-        this.wieldable = false  // for weapons
-        this.holdable = false   // for tools (torches, etc)
-
+        this.holdable = false   // can this item be in an inventory
         this.openable = false
-        this.inventory = []
+        this.inventory = undefined
 
         obj && Object.assign(this, obj); // copy constructor
-        if (!this._id) {
-            this._id = uuid4()
-        }
     }
+    get id() { return this._id }
+    set id(id) { this._id = id || uuid4() }
 
-    equip(slot) {
-        this.equipped = true
-    }
-    unequip() {
-        this.equipped = false
-    }
 }
 
 module.exports = Item

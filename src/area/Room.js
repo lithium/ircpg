@@ -12,11 +12,14 @@ class Exit
 
 class Room 
 {
-    constructor(id, description, name) {
-        this.id = id
-        this.description = description || 'An empty room.'
-        this.name = name 
+    constructor(obj) {
+        this.id = undefined
+        this.description = 'An empty room.'
+        this.name = undefined 
         this.exits = {}
+        this.items = []
+
+        obj && Object.assign(this, obj); // copy constructor
     }
 
     get id() { return this._id }
@@ -36,6 +39,19 @@ class Room
 
         this.addExit(direction, ourExit)
         room.addExit(oppositeDirection, theirExit)
+    }
+
+    addItem(item) {
+        this.items.push(item) 
+    }
+    takeItem(item, target) {
+        var index = this.items.findIndex(_ => _.id == item.id)
+        if (index) {
+            target.inventory.addItem(this.items[index]) // give item to target
+            this.items.splice(index, 1) // remove from room
+            return true
+        }
+        return false
     }
 }
 

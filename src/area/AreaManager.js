@@ -28,7 +28,16 @@ class AreaManager extends IrcpgModule
     }
 
     commandLook(from, argv, msg, channel) {
-        this.describeRoom(channel)
+        var room = channel.area.currentRoom
+        if (argv.length > 1) {
+            var target = argv.slice(1).join(" ").toLowerCase()
+            var item = room.items.find(_ => _.name.toLowerCase() == target)
+            if (item) {
+                this.describeItem(channel, item)
+                return
+            }
+        }
+        this.describeRoom(channel, room)
     }
 
     commandGo(from, argv, msg, channel) {
@@ -46,19 +55,21 @@ class AreaManager extends IrcpgModule
         }
     }
 
-    describeRoom(channel) {
-        if (!channel.area) {
-            return;
+    describeItem(channel, item) {
+        var descr;
+        if (item.description) {
+            descr = item.description
+        } else {
+            descr = `It is a ${item.name}.`
         }
+        this.client.say(channel.name, descr)
+    }
 
-        var room = channel.area.currentRoom
-        if (!room) {
-            return;
-        }
-
+    describeRoom(channel, room) {
         var out = [
             room.name ? `${room.name}: ${room.description}` : room.description,
-            `Exits: ${Object.keys(room.exits).join(", ")}`
+            `Exits: ${Object.keys(room.exits).join(", ")}`,
+            `Items: ${room.items.filter(_ => _.holdable).map(_ => _.name).join(", ")}`,
         ]
 
         out.forEach(_ => {
