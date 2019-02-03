@@ -12,6 +12,7 @@ class CharacterManager extends IrcpgModule
         this.addCommand("REGISTER", this.commandRegister);
         this.addCommand("SET", this.commandSet);
 
+        this.addCommand("EQUIP", this.commandEquip);
         this.addCommand("INVENTORY", this.commandInventory);
     }
 
@@ -73,8 +74,31 @@ class CharacterManager extends IrcpgModule
         this.characterService.authenticatedCharacter(msg).then(char => {
             this.client.say(from, `Inventory (${char.inventory.items.length}):`)
             char.inventory.items.forEach(_ => {
-                this.client.say(from, _.name)
+                this.client.say(from, `${_.equipped ? '(E)': '   '} ${_.name}`)
             })
+        }, err => {})
+    }
+
+    commandEquip(from, argv, msg) {
+        this.characterService.authenticatedCharacter(msg).then(char => {
+            if (argv.length > 1) {
+                var slot = argv[1]
+                var target = argv.slice(2).join(" ")
+                var item = char.inventory.findByName(target)
+                if (item) {
+                    char.equipment.equip(slot, item)
+                    this.characterService.save(char)
+                    this.client.say(from, `Equipped ${item.name} on ${slot}`)
+                }
+            } else {
+                this.client.say(from, `Equipment:`)
+                Object.keys(char.equipment).forEach(slot => {
+                    var item = char.equipment[slot]
+                    if (item) {
+                        this.client.say(from, `${slot}: ${item.name}`)
+                    }
+                })
+            }
         }, err => {})
     }
 }

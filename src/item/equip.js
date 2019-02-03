@@ -56,6 +56,7 @@ class EquipmentInventory {
         if (typesForSlot && typesForSlot.indexOf(item.type) != -1)
         {
             this[slot] = item
+            item.equipped = true
             return true
         }
         return false
@@ -63,6 +64,7 @@ class EquipmentInventory {
 
     unequip(slot) {
         if (this[slot]) {
+            item.equipped = false
             delete this[slot];
         }
     }
@@ -92,6 +94,10 @@ class Inventory {
             return true;
         }
         return false
+    }
+    findByName(name) {
+        var name = name.toLowerCase()
+        return this.items.find(_ => _.name.toLowerCase() == name)
     }
 }
 

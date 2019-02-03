@@ -1,13 +1,19 @@
 # User Stories
 
+## System
+
+* "saves" should be changed to atomic updates
+* gamestate persistence across reloads
+
+
 ## Characters
 
 * ~~users can register nicks~~
 * ~~characters have a permanent state~~
 * ~~characters can change their password~~
 * ~~basic character actions~~
-* characters have an inventory
-* characters can equip equipment
+* ~~characters have an inventory~~
+* ~~characters can equip equipment~~
 
 
 ## Items
@@ -19,10 +25,10 @@
 
 * ~~each channel has an active Room~~
 * ~~rooms have any number of exits that connect to other Rooms~~
-* exits can have obstacles that require skill checks 
 * ~~rooms can contain Items~~
 * rooms can contain Mobs
 * rooms can be instantiated from a Template
+* exits can have obstacles that require skill checks 
 
 
 ## Mobs

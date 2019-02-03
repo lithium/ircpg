@@ -11,6 +11,7 @@ class Item
         this.type = undefined 
 
         this.holdable = false   // can this item be in an inventory
+        this.equipped = false
         this.openable = false
         this.inventory = undefined
 
