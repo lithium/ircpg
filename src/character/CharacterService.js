@@ -1,7 +1,7 @@
 
 const MongoService = require('../services/MongoService')
 const Character = require('./Character')
-
+const equip = require('../item/equip')
 
 class CharacterService extends MongoService
 {
@@ -15,9 +15,16 @@ class CharacterService extends MongoService
         this.collection = this.db.collection('characters')
     }
 
+    hydrate(obj) {
+      var char = new Character(obj);
+      char.inventory = new equip.Inventory(char.inventory)
+      char.equipment = new equip.EquipmentInventory(char.equipment)
+      return char
+    }
+
     getByNick(nick) {
         return this.collection.findOne({"nick": nick}).then(obj => {
-          return new Character(obj)
+          return this.hydrate(obj)
         })
     }
 
@@ -49,7 +56,7 @@ class CharacterService extends MongoService
       return new Promise((resolve, reject) => {
         this.getByNick(msg.nick).then(c => {
           if (this.is_authenticated(msg)) {
-            resolve(c)
+            resolve(this.hydrate(c))
           } else {
             reject()
           }

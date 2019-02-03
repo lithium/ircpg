@@ -11,6 +11,8 @@ class CharacterManager extends IrcpgModule
 
         this.addCommand("REGISTER", this.commandRegister);
         this.addCommand("SET", this.commandSet);
+
+        this.addCommand("INVENTORY", this.commandInventory);
     }
 
 
@@ -53,8 +55,7 @@ class CharacterManager extends IrcpgModule
             return
         }
 
-        this.characterService.authenticatedCharacter(msg).then(c => {
-            var char = new Character(c)
+        this.characterService.authenticatedCharacter(msg).then(char => {
             if (name == "password") {
                 char.set_password(value)
             }
@@ -63,7 +64,18 @@ class CharacterManager extends IrcpgModule
             }, e => {
                 this.client.say(from, `set: Unable to change ${name}.`)
             })
+        }, err => {
+            this.client.say(from, 'unauthenticated.')
         })
+    }
+
+    commandInventory(from, argv, msg) {
+        this.characterService.authenticatedCharacter(msg).then(char => {
+            this.client.say(from, `Inventory (${char.inventory.items.length}):`)
+            char.inventory.items.forEach(_ => {
+                this.client.say(from, _.name)
+            })
+        }, err => {})
     }
 }
 

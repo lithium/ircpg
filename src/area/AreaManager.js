@@ -56,6 +56,7 @@ class AreaManager extends IrcpgModule
         }
         if (item.holdable) {
             room.takeItem(item, character)
+            this.characterService.save(character)
             this.client.say(channel.name, `${character.nick} takes ${item.name}.`)
         } else {
             this.client.say(channel.name, `${character.nick} tries to pickup ${item.name} but cannot.`)
