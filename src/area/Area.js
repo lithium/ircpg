@@ -1,6 +1,7 @@
 const Room = require('./Room')
 const equip = require('../item/equip')
 const Item = require('../item/Item')
+const Mob = require('../mob/Mob')
 
 class Area
 {
@@ -46,6 +47,14 @@ class Area
             description: "This stone altar is pitted and worn",
         })
         demoRoom.addItem(altar);
+
+
+        var goblin = new Mob({
+            mobType: "Goblin",
+            hp: 5,
+            maxHp: 5
+        })
+        demoRoom.addMob(goblin)
 
         this.addRoom(demoRoom)
         this.addRoom(northRoom)

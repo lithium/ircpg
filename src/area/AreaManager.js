@@ -85,6 +85,12 @@ class AreaManager extends IrcpgModule
         if (holdableItems.length > 0) {
             out.push(`Items: ${holdableItems.map(_ => _.name).join(", ")}`)
         }
+        if (room.mobs.length > 0) {
+            room.mobs.forEach(_ => {
+                out.push(`${_.name} is here.`)
+            })
+
+        }
 
         out.forEach(_ => {
             this.client.say(channel.name, _)
