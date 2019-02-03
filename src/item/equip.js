@@ -79,7 +79,7 @@ class Inventory {
     }
 
     addItem(item) {
-        if (this.items.length < maxSize) {
+        if (this.items.length < this.maxSize) {
             this.items.push(item) 
             return true
         }

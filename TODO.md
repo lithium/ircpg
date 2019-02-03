@@ -20,7 +20,7 @@
 * ~~each channel has an active Room~~
 * ~~rooms have any number of exits that connect to other Rooms~~
 * exits can have obstacles that require skill checks 
-* rooms can contain Items
+* ~~rooms can contain Items~~
 * rooms can contain Mobs
 * rooms can be instantiated from a Template
 

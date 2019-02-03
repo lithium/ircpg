@@ -16,7 +16,9 @@ class CharacterService extends MongoService
     }
 
     getByNick(nick) {
-        return this.collection.findOne({"nick": nick})
+        return this.collection.findOne({"nick": nick}).then(obj => {
+          return new Character(obj)
+        })
     }
 
     authenticate(character, msg) {

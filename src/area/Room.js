@@ -18,6 +18,7 @@ class Room
         this.name = undefined 
         this.exits = {}
         this.items = []
+        this.mobs = []
 
         obj && Object.assign(this, obj); // copy constructor
     }
@@ -43,12 +44,29 @@ class Room
 
     addItem(item) {
         this.items.push(item) 
+        return true
     }
     takeItem(item, target) {
         var index = this.items.findIndex(_ => _.id == item.id)
-        if (index) {
+        if (index != -1) {
             target.inventory.addItem(this.items[index]) // give item to target
             this.items.splice(index, 1) // remove from room
+            return true
+        }
+        return false
+    }
+    findItemByName(itemName) {
+        var itemName = itemName.toLowerCase()
+        return this.items.find(_ => _.name.toLowerCase() == itemName)
+    }
+
+    addMob(mob) {
+        this.mobs.push(mob)
+    }
+    killMob(mob) {
+        var index = this.mobs.findIndex(_ => _.id == mob.id)
+        if (index) {
+            this.mobs.splice(index, 1)
             return true
         }
         return false

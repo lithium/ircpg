@@ -5,33 +5,21 @@ class AreaManager extends IrcpgModule
     load() {
         super.load()
 
-        this.addHandler("action", this.handleActionForCommand)
-
-        this.addCommand("look", this.commandLook);
-        this.addCommand("go", this.commandGo);
+        this.addAction("look", this.actionLook);
+        this.addAction("go", this.actionGo);
+        this.addAction("pickup", this.actionPickup);
     }
 
     unload() {
         super.unload()
-
-        this.removeHandler("action", this.handleActionForCommand)
     }
 
 
-    handleActionForCommand(from, to, txt, msg) 
-    {
-        if (to.startsWith('#')) {
-            this.channelService.getOrCreate(to).then(chan => {
-                this.handlePmForCommand(from, txt, msg, chan)
-            })
-        }
-    }
-
-    commandLook(from, argv, msg, channel) {
+    actionLook(character, channel, argv, msg) {
         var room = channel.area.currentRoom
         if (argv.length > 1) {
             var target = argv.slice(1).join(" ").toLowerCase()
-            var item = room.items.find(_ => _.name.toLowerCase() == target)
+            var item = room.findItemByName(target)
             if (item) {
                 this.describeItem(channel, item)
                 return
@@ -40,7 +28,7 @@ class AreaManager extends IrcpgModule
         this.describeRoom(channel, room)
     }
 
-    commandGo(from, argv, msg, channel) {
+    actionGo(character, channel, argv, msg) {
         if (argv.length < 2) {
             return
         }
@@ -55,6 +43,25 @@ class AreaManager extends IrcpgModule
         }
     }
 
+    actionPickup(character, channel, argv, msg) {
+        if (argv.length < 2) {
+            return
+        }
+
+        var target = argv.slice(1).join(" ").toLowerCase()
+        var room = channel.area.currentRoom
+        var item = room.findItemByName(target)
+        if (!item) {
+            return;
+        }
+        if (item.holdable) {
+            room.takeItem(item, character)
+            this.client.say(channel.name, `${character.nick} takes ${item.name}.`)
+        } else {
+            this.client.say(channel.name, `${character.nick} tries to pickup ${item.name} but cannot.`)
+        }
+    }
+
     describeItem(channel, item) {
         var descr;
         if (item.description) {
@@ -66,11 +73,17 @@ class AreaManager extends IrcpgModule
     }
 
     describeRoom(channel, room) {
+        var exitNames = Object.keys(room.exits)
+        var holdableItems = room.items.filter(_ => _.holdable)
         var out = [
             room.name ? `${room.name}: ${room.description}` : room.description,
-            `Exits: ${Object.keys(room.exits).join(", ")}`,
-            `Items: ${room.items.filter(_ => _.holdable).map(_ => _.name).join(", ")}`,
         ]
+        if (exitNames.length > 0) {
+            out.push(`Exits: ${Object.keys(room.exits).join(", ")}`)
+        }
+        if (holdableItems.length > 0) {
+            out.push(`Items: ${holdableItems.map(_ => _.name).join(", ")}`)
+        }
 
         out.forEach(_ => {
             this.client.say(channel.name, _)
